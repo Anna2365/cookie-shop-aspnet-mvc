@@ -1,0 +1,35 @@
+﻿@{
+    int selectedCategory = ViewBag.SelectedCategory ?? 0;
+}
+
+<nav class="member-navbar p-3">
+    <h2 class="mb-4 d-none d-md-block">商品分類</h2>
+
+    <!-- 收合區塊 -->
+    <div class="collapse d-md-block" id="productSidebar">
+
+        <!-- 分類選單 -->
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                @Html.ActionLink("全部商品", "ProductList", "Products",
+                    new { categoryId = (int?)null },
+                    new { @class = "nav-link" + (selectedCategory == 0 ? " active" : "") })
+            </li>
+            <li class="nav-item">
+                @Html.ActionLink("推薦商品", "ProductList", "Products",
+                    new { categoryId = 5 },
+                    new { @class = "nav-link" + (selectedCategory == 5 ? " active" : "") })
+            </li>
+            <li class="nav-item">
+                @Html.ActionLink("特色商品", "ProductList", "Products",
+                    new { categoryId = 6 },
+                    new { @class = "nav-link" + (selectedCategory == 6 ? " active" : "") })
+            </li>
+            <li class="nav-item">
+                @Html.ActionLink("手工餅乾", "ProductList", "Products",
+                    new { categoryId = 7 },
+                    new { @class = "nav-link" + (selectedCategory == 7 ? " active" : "") })
+            </li>
+        </ul>
+    </div>
+</nav>

@@ -1,0 +1,148 @@
+﻿@model FrontendCookieShopDemo.Models.ViewModels.CartViewModel
+
+@{
+    ViewBag.Title = "購物車資訊";
+}
+
+<h2 class="cart-title">購物車資訊</h2>
+
+@if (!Model.Items.Any())
+{
+    <div class="empty-cart-wrapper">
+        <p class="empty-cart-message">購物車目前是空的</p>
+    </div>
+}
+else
+{
+    <div class="cart-items-container">
+        <table class="table cart-table d-none d-md-table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>商品名稱</th>
+                    <th>數量</th>
+                    <th>單價</th>
+                    <th>小計</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td style="width:80px;">
+                            <img src="@Url.Content("~/Images/" + item.ProductImage)"
+                                 alt="@item.ProductName"
+                                 style="max-height:60px; max-width:60px; object-fit:cover;" />
+                        </td>
+                        <td>@item.ProductName</td>
+                        <td>
+                            @using (Html.BeginForm("UpdateQuantity", "Carts", FormMethod.Post, new { @class = "qty-form d-inline" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.Hidden("productId", item.ProductId)
+
+                                <div class="input-group input-group-sm qty-selector" data-id="@item.ProductId">
+                                    <button type="button" class="btn btn-outline-secondary btn-decrease">−</button>
+                                    <input type="text"
+                                           name="qty"
+                                           class="form-control text-center qty-input"
+                                           value="@item.Qty"
+                                           style="width:50px;" />
+                                    <button type="button" class="btn btn-outline-secondary btn-increase">＋</button>
+                                </div>
+                            }
+                        </td>
+                        <td>@item.Price 元</td>
+                        <td>@item.SubTotal 元</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-danger btn-remove" data-id="@item.ProductId" title="移除商品">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+   
+    <!-- 結帳按鈕  -->
+    <div class="cart-totals mt-4">
+        <p><strong>小計：@Model.SubTotal 元</strong></p>
+        <button id="btn-next" class="btn btn-checkout">訂單結帳</button>
+    </div>
+}
+
+
+
+
+
+@section Scripts {
+    <script>
+$(function() {
+  // 減少數量
+  $('.btn-decrease').click(function () {
+    var $grp = $(this).closest('.qty-selector');
+    var $input = $grp.find('.qty-input');
+    var v = parseInt($input.val(), 10) || 0;
+    $input.val(v > 1 ? v - 1 : 0).trigger('change');
+  });
+
+  // 增加數量
+  $('.btn-increase').click(function () {
+    var $grp = $(this).closest('.qty-selector');
+    var $input = $grp.find('.qty-input');
+    var v = parseInt($input.val(), 10) || 0;
+    $input.val(v + 1).trigger('change');
+  });
+
+  // 數量更新後自動提交表單
+  $('.qty-input').change(function () {
+    var $form = $(this).closest('form.qty-form');
+    $form.submit();
+  });
+
+  // 移除商品
+  $('.btn-remove').click(function () {
+    var productId = $(this).data('id');
+    var $row = $(this).closest('tr');
+
+    // 移除商品的提示訊息
+    Swal.fire({
+      title: '確定要移除這項商品嗎？',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: '移除',
+      cancelButtonText: '取消'
+    }).then(function(result) {
+      if (result.isConfirmed) {
+        $.post('@Url.Action("RemoveItem","Carts")', { productId: productId })
+         .done(function(res) {
+           if (res.success) {
+             Swal.fire('已移除', '商品已從購物車中移除。', 'success')
+              .then(function() {
+                $row.remove();
+                location.reload();
+              });
+           } else {
+             Swal.fire('錯誤', res.message, 'error');
+           }
+         })
+         .fail(function() {
+           Swal.fire('錯誤', '伺服器錯誤，請稍後再試。', 'error');
+         });
+      }
+    });
+  });
+
+  // 下一步按鈕
+  $('#btn-next').click(function() {
+    window.location.href = '@Url.Action("Checkout","Orders")';
+  });
+
+});  
+    </script>
+}
