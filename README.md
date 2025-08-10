@@ -48,7 +48,7 @@ YouTube 專案簡介影片 : https://youtu.be/ZbK3FWgM0GI
 - 前台開發：ASP.NET MVC (.NET Framework)
 - 後台開發：ASP.NET Core MVC + Web API
 - 資料庫：MS SQL
-- 資料存取：Entity Framework+ LINQ、Entity Framework Core+ LINQ、Dapper、Dapper
+- 資料存取：Entity Framework+ LINQ、Entity Framework Core+ LINQ、Dapper
 - 網頁設計：HTML / CSS / JavaScript / Bootstrap / Vue
 - 圖表分析：Chart.js
 - 版本控制：GitHub
