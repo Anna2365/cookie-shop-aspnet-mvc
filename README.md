@@ -2,7 +2,7 @@
 
 使用 ASP.NET MVC 與 ASP.NET Core MVC 搭配 Web API 製作的手工餅乾購物網站，功能包含會員註冊登入、商品瀏覽與加入購物車、訂單建立及管理，以及後台商品與各類資訊管理、使用者權限管理等功能。
 
-YouTube 專案簡介影片 : https://youtu.be/ZbK3FWgM0GI
+YouTube 專案簡介影片 : https://youtu.be/ASaeyCofD4I
 
 ---
 
